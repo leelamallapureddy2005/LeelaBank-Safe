@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head><title>Dashboard</title>
+<style>body{font-family:Arial;background:#eef;text-align:center;padding:30px}.box{background:white;padding:20px;border-radius:10px;width:400px;margin:auto;box-shadow:0 0 10px gray} input,button{padding:10px;margin:5px} button{border:none;border-radius:5px;cursor:pointer}.d{background:#007bff;color:white}.w{background:#ff4444;color:white}</style>
+</head>
+<body>
+<div class="box">
+<h2>Welcome <span id="user"></span></h2>
+<h3>Acc: <span id="accNo"></span></h3>
+<h1>Balance: ₹<span id="bal">0</span></h1>
+<hr>
+<input id="amt" type="number" placeholder="Enter Amount">
+<br>
+<button class="d" onclick="deposit()">Deposit</button>
+<button class="w" onclick="withdraw()">Withdraw</button>
+<br><br>
+<button onclick="logout()">Logout</button>
+<p id="msg"></p>
+</div>
+<script>
+let acc=localStorage.getItem('acc');
+document.getElementById('accNo').innerText=acc;
+let info=localStorage.getItem('info');
+if(info) document.getElementById('user').innerText=info.split('|')[1];
+loadBalance();
+async function loadBalance(){
+ let res=await fetch('http://localhost:8080/api/balance?acc='+acc);
+ let b=await res.text();
+ document.getElementById('bal').innerText=b;
+}
+async function deposit(){
+ let amt=document.getElementById('amt').value;
+ let res=await fetch('http://localhost:8080/api/deposit',{method:'POST',body:acc+","+amt});
+ let b=await res.text();
+ document.getElementById('bal').innerText=b;
+ document.getElementById('msg').innerText='Deposited ₹'+amt;
+}
+async function withdraw(){
+ let amt=document.getElementById('amt').value;
+ let res=await fetch('http://localhost:8080/api/withdraw',{method:'POST',body:acc+","+amt});
+ let b=await res.text();
+ if(b=='INSUFFICIENT') document.getElementById('msg').innerText='Not enough balance!';
+ else { document.getElementById('bal').innerText=b; document.getElementById('msg').innerText='Withdrawn ₹'+amt; }
+}
+function logout(){ localStorage.clear(); window.location='index.html'; }
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><title>Create Account</title>
+<style>body{font-family:Arial;background:#f0f8ff;text-align:center;padding:50px}.box{background:white;padding:30px;border-radius:10px;width:300px;margin:auto;box-shadow:0 0 10px gray} input,button{width:90%;padding:10px;margin:10px} button{background:green;color:white;border:none;border-radius:5px}</style>
+</head>
+<body>
+<div class="box">
+<h2>Create Account</h2>
+<input id="acc" placeholder="Account Number (ex: 1001)">
+<input id="name" placeholder="Your Name">
+<input id="pin" placeholder="Set PIN">
+<button onclick="createAcc()">Create</button>
+<p><a href="index.html">Go to Login</a></p>
+<p id="msg"></p>
+</div>
+<script>
+async function createAcc(){
+ let acc=document.getElementById('acc').value;
+ let name=document.getElementById('name').value;
+ let pin=document.getElementById('pin').value;
+ let res=await fetch('http://localhost:8080/api/create',{method:'POST',body:acc+","+name+","+pin});
+ let data=await res.text();
+ document.getElementById('msg').innerText=data + " - Now Login";
+}
+</script>
+</body>
+</html>

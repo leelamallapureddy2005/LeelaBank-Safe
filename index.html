@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><title>LeelaBank - Login</title>
+<style>body{font-family:Arial;background:#f0f8ff;text-align:center;padding:50px}.box{background:white;padding:30px;border-radius:10px;width:300px;margin:auto;box-shadow:0 0 10px gray} input,button{width:90%;padding:10px;margin:10px} button{background:#007bff;color:white;border:none;border-radius:5px;cursor:pointer}</style>
+</head>
+<body>
+<div class="box">
+<h2>LeelaBank-Safe Login</h2>
+<input id="acc" placeholder="Account Number">
+<input id="pin" type="password" placeholder="PIN">
+<button onclick="login()">Login</button>
+<p><a href="create.html">Create Account</a></p>
+<p id="msg"></p>
+</div>
+<script>
+async function login(){
+ let acc=document.getElementById('acc').value;
+ let pin=document.getElementById('pin').value;
+ let res=await fetch('http://localhost:8080/api/login',{method:'POST',body:acc+","+pin});
+ let data=await res.text();
+ if(data.startsWith('SUCCESS')){
+   localStorage.setItem('acc',acc);
+   localStorage.setItem('info',data);
+   window.location='dashboard.html';
+ } else { document.getElementById('msg').innerText='Invalid Login'; }
+}
+</script>
+</body>
+</html>
